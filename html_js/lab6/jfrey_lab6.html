@@ -19,10 +19,134 @@
 	<script>
 		//create function to initialize map, which is called by the api src
 		function initMap(){
-		//create the map using variable name 'map'
+		//create the map using variable name `map`` under the `Map` class
+    //note that you can have more than one instance of this class, and that
+    //each object will define a separate map on the page. We create a new instance
+    //of this class using the `new` operator
+var styledMapType = new google.maps.StyledMapType(
+            [
+              {elementType: 'geometry', stylers: [{color: '#f2f2f2'}]},
+              {elementType: 'labels.text.fill', stylers: [{color: '#444444'}]},
+              {elementType: 'labels.text.stroke', stylers: [{color: '#f5f1e6'}]},
+              {
+                featureType: 'administrative',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#c9b2a6'}]
+              },
+              {
+                featureType: 'administrative.land_parcel',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#dcd2be'}]
+              },
+              {
+                featureType: 'administrative.land_parcel',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#ae9e90'}]
+              },
+              {
+                featureType: 'landscape.natural',
+                elementType: 'geometry',
+                stylers: [{color: '#f2f2f2'}]
+              },
+              {
+                featureType: 'poi',
+                elementType: 'geometry',
+                stylers: [{color: '#dfd2ae'}]
+              },
+              {
+                featureType: 'poi',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#93817c'}]
+              },
+              {
+                featureType: 'poi.park',
+                elementType: 'geometry.fill',
+                stylers: [{color: '#065535'}]
+              },
+              {
+                featureType: 'poi.park',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#447530'}]
+              },
+              {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{color: '#f5f1e6'}]
+              },
+              {
+                featureType: 'road.arterial',
+                elementType: 'geometry',
+                stylers: [{color: '#fdfcf8'}]
+              },
+              {
+                featureType: 'road.highway',
+                elementType: 'geometry',
+                stylers: [{color: '#f8c967'}]
+              },
+              {
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#e9bc62'}]
+              },
+              {
+                featureType: 'road.highway.controlled_access',
+                elementType: 'geometry',
+                stylers: [{color: '#e98d58'}]
+              },
+              {
+                featureType: 'road.highway.controlled_access',
+                elementType: 'geometry.stroke',
+                stylers: [{color: '#db8555'}]
+              },
+              {
+                featureType: 'road.local',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#806b63'}]
+              },
+              {
+                featureType: 'transit.line',
+                elementType: 'geometry',
+                stylers: [{color: '#dfd2ae'}]
+              },
+              {
+                featureType: 'transit.line',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#8f7d77'}]
+              },
+              {
+                featureType: 'transit.line',
+                elementType: 'labels.text.stroke',
+                stylers: [{color: '#ebe3cd'}]
+              },
+              {
+                featureType: 'transit.station',
+                elementType: 'geometry',
+                stylers: [{color: '#dfd2ae'}]
+              },
+              {
+                featureType: 'water',
+                elementType: 'geometry.fill',
+                stylers: [{color: '#aecfdc'}]
+              },
+              {
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [{color: '#92998d'}]
+              }
+            ],
+            {name: 'My Style'}); 
+
+        //actual map that is being created
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 37.7339, lng: -119.6377},
           zoom: 12,
+          mapTypeControlOptions: {
+            mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
+                    'My Style']
+          },
+          //mapTypeControlOptions: {
+            //  mapTypeIds: ['roadmap']
+              //}
           //turn off labels and various default markers.
           //see https://developers.google.com/maps/documentation/javascript/style-reference#style-features for available feature types
           styles: [
@@ -66,7 +190,48 @@
               elementType: 'labels',
               stylers: [{ visibility: "off"}]
             }
-          ]
+          ],
+        });
+
+/*
+        var map2 = new google.maps.Map(document.getElementById('map2'), {
+          center: {lat: 37.7339, lng: -119.6377},
+          zoom: 12,
+          google.maps.MapTypeControlStyle.HORIZONTAL_BAR
+        });
+*/
+
+        var marker = new google.maps.Marker({
+        	position: {lat: 37.7339, lng: -119.6377},
+        	map: map,
+        	title: "Coordinates for El Capitan, Yosemite National Park"
+        });
+
+        var triangleCoords = [
+          {lat: 25.774, lng: -80.190},
+          {lat: 18.466, lng: -66.118},
+          {lat: 32.321, lng: -64.757},
+          {lat: 25.774, lng: -80.190}
+        ];
+        var bermudaTriangle = new google.maps.Polygon({
+          paths: triangleCoords,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35
+        });
+        bermudaTriangle.setMap(map)
+
+        map.mapTypes.set('My Style', styledMapType);
+        map.setMapTypeId('My Style');
+
+
+        var JonasClark = new google.maps.KmlLayer({
+          url: "https://drive.google.com/uc?export=download&id=1rwazgazMuCBCwNZZc4oss5JU5RabX6q4",
+          suppressInfoWindows: true,
+          preserveViewport: true,
+          map: map
         });
       }
 	</script>
